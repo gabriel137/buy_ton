@@ -12,7 +12,8 @@ To start the application manually:
 To start the applications by docker
   
   * Run `make up` to run the application with docker
+  * Run `make deps_get` to install the dependencies
   
-To make tests
+To run the tests
 
   * Run `make mix_test` to running the tests
