@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  core:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      target: build
+      args:
+        MIX_ENV: prod
+    container_name: buy_ton
+    command: iex -S mix phx.server
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    networks:
+      - buy_ton
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+networks:
+  buy_ton:
+    name: buy_ton
+
+volumes:
+  postgres_data:
