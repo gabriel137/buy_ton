@@ -11,15 +11,17 @@ defmodule BuyTon.ShoppingList.HandleShoppingList do
     Se todas as etapas forem bem-sucedidas, retorna um mapa contendo a distribuição das compras.
     Caso contrário, retorna uma tupla com informações sobre o erro encontrado.
   """
-  import BuyTon.Validations
-  import BuyTon.PurchaseCalculator
+  alias BuyTon.Validations
+  alias BuyTon.PurchaseCalculator
 
 
   @spec run(List.t, List.t) :: map | {:error, :duplicated_emails | :empty_lists | :invalid_total}
   def run(shopping_list, emails_list) do
-    with {:ok, _} <- validate(shopping_list, emails_list),
-         {:ok, purchase} <- splitting_account(shopping_list, emails_list) do
+    with {:ok, _} <- Validations.validate(shopping_list, emails_list),
+         {:ok, purchase} <- PurchaseCalculator.splitting_account(shopping_list, emails_list) do
       purchase
+    else
+      {:error, reason} -> {:error, reason}
     end
   end
 

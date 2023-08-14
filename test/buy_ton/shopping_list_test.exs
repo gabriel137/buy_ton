@@ -32,6 +32,18 @@ defmodule BuyTon.ShoppingListTest do
       assert {:error, :empty_lists} = HandleShoppingList.run(shopping_list, emails_list)
     end
 
+    test "check emails_list empty", %{shopping_list: shopping_list} do
+      emails_list = []
+
+      assert {:error, :empty_lists} = HandleShoppingList.run(shopping_list, emails_list)
+    end
+
+    test "check shopping_list empty", %{emails_list: emails_list} do
+      shopping_list = []
+
+      assert {:error, :empty_lists} = HandleShoppingList.run(shopping_list, emails_list)
+    end
+
     test "check is valid total", %{emails_list: emails_list} do
       shopping_list = [
         %{item: "computador", quantidade: -2, preco_unidade: 1.5},
@@ -88,6 +100,44 @@ defmodule BuyTon.ShoppingListTest do
         "teste1@test.com" => 4,
         "teste2@test.com" => 3,
         "teste3@test.com" => 3,
+      }
+
+      actual_purchases = HandleShoppingList.run(shopping_list, emails_list)
+
+      assert expected_purchases == actual_purchases
+    end
+
+
+    test "check successful purchase split with 15 reais between 4 persons", %{emails_list: emails_list} do
+      shopping_list = [
+        %{item: "computador", quantidade: 2, preco_unidade: 500},
+        %{item: "computador", quantidade: 1, preco_unidade: 500}
+      ]
+
+      emails_list = List.insert_at(emails_list, -1, "teste4@test.com")
+
+      expected_purchases = %{
+        "teste1@test.com" => 375,
+        "teste2@test.com" => 375,
+        "teste3@test.com" => 375,
+        "teste4@test.com" => 375,
+      }
+
+      actual_purchases = HandleShoppingList.run(shopping_list, emails_list)
+
+      assert expected_purchases == actual_purchases
+    end
+
+
+    test "check successful purchase split with 10 reais between 1 person" do
+      shopping_list = [
+        %{item: "computador", quantidade: 2, preco_unidade: 500}
+      ]
+
+      emails_list = ["teste1@test.com"]
+
+      expected_purchases = %{
+        "teste1@test.com" => 1000
       }
 
       actual_purchases = HandleShoppingList.run(shopping_list, emails_list)

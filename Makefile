@@ -13,7 +13,7 @@ deps_get:
 mix_test:
 	docker compose run --rm core mix test
 
-exec:
+docker_exec:
 	docker exec -it buy_ton bash
 
 attach:

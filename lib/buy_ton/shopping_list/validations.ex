@@ -1,9 +1,7 @@
 defmodule BuyTon.Validations do
   @moduledoc """
     Módulo contendo funções para calcular os valores de uma listas de compras distribuindo os valores por e-mails.
-  """
 
-  @doc """
     Valida a lista de compras e a lista de e-mails.
 
     Realiza várias validações, incluindo verificação de listas vazias,
@@ -50,12 +48,7 @@ defmodule BuyTon.Validations do
     end
   end
 
-  defp has_empty_lists?(shopping_list, emails_list) do
-    case {shopping_list, emails_list} do
-      {[], []} ->
-        {:error, :empty_lists}
-      _ ->
-        {:ok, :non_empty_lists}
-    end
-  end
+  defp has_empty_lists?([], _), do: {:error, :empty_lists}
+  defp has_empty_lists?(_, []), do: {:error, :empty_lists}
+  defp has_empty_lists?(_, _), do: {:ok, :non_empty_lists}
 end
